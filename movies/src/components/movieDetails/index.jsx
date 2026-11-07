@@ -21,9 +21,14 @@ const root = {
 };
 const chip = { margin: 0.5 };
 
-const MovieDetails = ({ movie }) => {  // Don't miss this!
+const MovieDetails = ({ movie }) => {  
 const [drawerOpen, setDrawerOpen] = useState(false);
 
+const { data: credits, isPending: creditsLoading } = useQuery({
+    queryKey: ["credits", { id: movie.id }],
+    queryFn: getMovieCredits,
+  });
+  
   return (
     <>
       <Typography variant="h5" component="h3">
