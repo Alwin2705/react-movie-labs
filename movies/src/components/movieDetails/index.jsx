@@ -29,6 +29,11 @@ const { data: credits, isPending: creditsLoading } = useQuery({
     queryFn: getMovieCredits,
   });
 
+const { data: recommendations, isPending: recsLoading } = useQuery({
+    queryKey: ["recommendations", { id: movie.id }],
+    queryFn: getMovieRecommendations,
+  });  
+
   return (
     <>
       <Typography variant="h5" component="h3">
@@ -107,6 +112,39 @@ const { data: credits, isPending: creditsLoading } = useQuery({
                     </Typography>
                     <Typography variant="caption" display="block" color="textSecondary" noWrap>
                       {actor.character}
+                    </Typography>
+                  </CardContent>
+                </Link>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
+
+      <Typography variant="h5" component="h3" sx={{ marginTop: 3, marginBottom: 1 }}>
+        Recommended Movies
+      </Typography>
+      {recsLoading ? (
+        <Spinner />
+      ) : (
+        <Grid container spacing={2}>
+          {recommendations?.results?.slice(0, 4).map((rec) => (
+            <Grid item key={rec.id} xs={12} sm={6} md={3}>
+              <Card>
+                <Link to={`/movies/${rec.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={
+                      rec.poster_path
+                        ? `https://image.tmdb.org/t/p/w500${rec.poster_path}`
+                        : "https://via.placeholder.com/300x450"
+                    }
+                    alt={rec.title}
+                  />
+                  <CardContent sx={{ padding: 1 }}>
+                    <Typography variant="subtitle2" noWrap sx={{ fontWeight: "bold" }}>
+                      {rec.title}
                     </Typography>
                   </CardContent>
                 </Link>
