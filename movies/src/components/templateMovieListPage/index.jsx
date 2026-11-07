@@ -17,6 +17,14 @@ function MovieListPageTemplate({ movies, title, action }) {
       return genreId > 0 ? m.genre_ids.includes(genreId) : true;
     });
 
+    displayedMovies.sort((a, b) => {
+    if (sortFilter === "title_asc") return a.title.localeCompare(b.title);
+    if (sortFilter === "title_desc") return b.title.localeCompare(a.title);
+    if (sortFilter === "rating_desc") return b.vote_average - a.vote_average;
+    if (sortFilter === "rating_asc") return a.vote_average - b.vote_average;
+    return 0;
+  });
+
   const handleChange = (type, value) => {
     if (type === "name") setNameFilter(value);
     else setGenreFilter(value);
@@ -37,6 +45,7 @@ function MovieListPageTemplate({ movies, title, action }) {
             onUserInput={handleChange}
             titleFilter={nameFilter}
             genreFilter={genreFilter}
+            sortFilter={sortFilter}
           />
         </Grid>
         <MovieList action={action} movies={displayedMovies}></MovieList>
