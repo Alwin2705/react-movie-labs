@@ -28,7 +28,7 @@ const { data: credits, isPending: creditsLoading } = useQuery({
     queryKey: ["credits", { id: movie.id }],
     queryFn: getMovieCredits,
   });
-  
+
   return (
     <>
       <Typography variant="h5" component="h3">
@@ -79,6 +79,42 @@ const { data: credits, isPending: creditsLoading } = useQuery({
           </li>
         ))}
       </Paper>
+
+      <Typography variant="h5" component="h3" sx={{ marginTop: 3, marginBottom: 1 }}>
+        Cast
+      </Typography>
+      {creditsLoading ? (
+        <Spinner />
+      ) : (
+        <Grid container spacing={2}>
+          {credits?.cast?.slice(0, 6).map((actor) => (
+            <Grid item key={actor.id} xs={6} sm={4} md={2}>
+              <Card>
+                <Link to={`/person/${actor.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                  <CardMedia
+                    component="img"
+                    height="160"
+                    image={
+                      actor.profile_path
+                        ? `https://image.tmdb.org/t/p/w500${actor.profile_path}`
+                        : "https://via.placeholder.com/200x300"
+                    }
+                    alt={actor.name}
+                  />
+                  <CardContent sx={{ padding: 1 }}>
+                    <Typography variant="subtitle2" noWrap sx={{ fontWeight: "bold" }}>
+                      {actor.name}
+                    </Typography>
+                    <Typography variant="caption" display="block" color="textSecondary" noWrap>
+                      {actor.character}
+                    </Typography>
+                  </CardContent>
+                </Link>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
       
       <Fab
         color="secondary"
