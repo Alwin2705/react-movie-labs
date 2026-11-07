@@ -52,6 +52,10 @@ export default function FilterMoviesCard(props) {
     handleChange(e, "genre", e.target.value);
   };
 
+  const handleSortChange = (e) => {
+    handleChange(e, "sort", e.target.value);
+  };
+
   return (
     <Card 
       sx={{
@@ -88,6 +92,21 @@ export default function FilterMoviesCard(props) {
                 </MenuItem>
               );
             })}
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ ...formControl }}>
+          <InputLabel id="sort-label">Sort By</InputLabel>
+          <Select
+            labelId="sort-label"
+            id="sort-select"
+            value={props.sortFilter || "title_asc"}
+            onChange={handleSortChange}
+          >
+            <MenuItem value="title_asc">Title (A-Z)</MenuItem>
+            <MenuItem value="title_desc">Title (Z-A)</MenuItem>
+            <MenuItem value="rating_desc">Rating (High to Low)</MenuItem>
+            <MenuItem value="rating_asc">Rating (Low to High)</MenuItem>
           </Select>
         </FormControl>
       </CardContent>
