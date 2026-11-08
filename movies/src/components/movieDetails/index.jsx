@@ -9,7 +9,14 @@ import Fab from "@mui/material/Fab";
 import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
 import MovieReviews from "../movieReviews"
-
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import { Link } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getMovieCredits, getMovieRecommendations } from "../../api/tmdb-api";
+import Spinner from "../spinner";
 
 const root = {
     display: "flex",
