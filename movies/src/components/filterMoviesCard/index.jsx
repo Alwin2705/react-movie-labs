@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import Spinner from '../spinner';
 import { getGenres } from "../../api/tmdb-api";
 import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
@@ -11,40 +10,33 @@ import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import img from '../../images/pexels-dziana-hasanbekava-5480827.jpg'
+import FilterListIcon from "@mui/icons-material/FilterList";
 
-const formControl = 
-  {
-    margin: 1,
-    minWidth: "90%",
-    backgroundColor: "rgb(255, 255, 255)"
-  };
+const formControl = {
+  margin: 1,
+  minWidth: "90%",
+};
 
 export default function FilterMoviesCard(props) {
-
   const { data, error, isPending, isError } = useQuery({
     queryKey: ['genres'],
     queryFn: getGenres,
   });
 
-  if (isPending) {
-    return <Spinner />;
-  }
+  if (isPending) return <Spinner />;
+  if (isError) return <h1>{error.message}</h1>;
 
-  if (isError) {
-    return <h1>{error.message}</h1>;
-  }
   const genres = data.genres;
-  if (genres[0].name !== "All"){
+  if (genres[0].name !== "All") {
     genres.unshift({ id: "0", name: "All" });
   }
 
   const handleChange = (e, type, value) => {
     e.preventDefault();
-    props.onUserInput(type, value); 
+    props.onUserInput(type, value);
   };
 
-  const handleTextChange = (e, props) => {
+  const handleTextChange = (e) => {
     handleChange(e, "name", e.target.value);
   };
 
@@ -57,41 +49,36 @@ export default function FilterMoviesCard(props) {
   };
 
   return (
-    <Card 
-      sx={{
-        backgroundColor: "rgb(204, 204, 0)"
-      }} 
-      variant="outlined">
+    <Card elevation={4} sx={{ borderRadius: 3, padding: 1 }}>
       <CardContent>
-        <Typography variant="h5" component="h1">
-          <SearchIcon fontSize="large" />
-          Filter the movies.
+        <Typography variant="h6" component="h2" sx={{ display: "flex", alignItems: "center", gap: 1, marginBottom: 2 }}>
+          <FilterListIcon color="primary" /> Filter & Sort
         </Typography>
+
         <TextField
-          sx={{...formControl}}
+          sx={{ ...formControl }}
           id="filled-search"
-          label="Search field"
+          label="Search movie title"
           type="search"
-          variant="filled"
+          variant="outlined"
           value={props.titleFilter}
           onChange={handleTextChange}
         />
-        <FormControl sx={{...formControl}}>
+
+        <FormControl sx={{ ...formControl }}>
           <InputLabel id="genre-label">Genre</InputLabel>
           <Select
             labelId="genre-label"
             id="genre-select"
-            defaultValue=""
             value={props.genreFilter}
+            label="Genre"
             onChange={handleGenreChange}
           >
-            {genres.map((genre) => {
-              return (
-                <MenuItem key={genre.id} value={genre.id}>
-                  {genre.name}
-                </MenuItem>
-              );
-            })}
+            {genres.map((genre) => (
+              <MenuItem key={genre.id} value={genre.id}>
+                {genre.name}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
 
@@ -101,6 +88,7 @@ export default function FilterMoviesCard(props) {
             labelId="sort-label"
             id="sort-select"
             value={props.sortFilter || "title_asc"}
+            label="Sort By"
             onChange={handleSortChange}
           >
             <MenuItem value="title_asc">Title (A-Z)</MenuItem>
@@ -109,18 +97,6 @@ export default function FilterMoviesCard(props) {
             <MenuItem value="rating_asc">Rating (Low to High)</MenuItem>
           </Select>
         </FormControl>
-      </CardContent>
-      <CardMedia
-        sx={{ height: 300 }}
-        image={img}
-        title="Filter"
-      />
-      <CardContent>
-        <Typography variant="h5" component="h1">
-          <SearchIcon fontSize="large" />
-          Filter the movies.
-          <br />
-        </Typography>
       </CardContent>
     </Card>
   );
